@@ -34,6 +34,9 @@ public class Covid19Parser {
             String text = strings.get(getYesterdayDateString());
             poits.add(new Poit(lat, lon, text));
         }
+        poits.add(new Poit(51.650237, 16.078453, "0. domek kochanej Izusi :)"));
+        poits.add(new Poit(50.782304, 17.083244, "0. Tu mieszka mistrz Javy :)"));
+
         return poits;
     }
 
