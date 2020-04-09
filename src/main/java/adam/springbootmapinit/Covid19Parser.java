@@ -7,7 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,12 +24,6 @@ public class Covid19Parser {
         RestTemplate restTemplate = new RestTemplate();
         String values = restTemplate.getForObject(url, String.class);
 
-//        File file = new File("c://ws//covid.csv");
-//        file.createNewFile();
-//        FileWriter fileWriter = new FileWriter(file);
-//        fileWriter.write(values);
-//        fileWriter.flush();
-//        fileWriter.close();
 
         StringReader stringReader = new StringReader(values);
         CSVParser parse = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(stringReader);
@@ -33,9 +31,21 @@ public class Covid19Parser {
         for (CSVRecord strings : parse) {
             double lat = Double.parseDouble(strings.get("Lat"));
             double lon = Double.parseDouble(strings.get("Long"));
-            String text = strings.get("4/8/20");
+            String text = strings.get(getYesterdayDateString());
             poits.add(new Poit(lat, lon, text));
         }
         return poits;
     }
+
+    public Date yesterday() {
+        final Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        return cal.getTime();
+    }
+
+    public String getYesterdayDateString() {
+        DateFormat dateFormat = new SimpleDateFormat("M/d/yy");
+        return dateFormat.format(yesterday());
+    }
 }
+
